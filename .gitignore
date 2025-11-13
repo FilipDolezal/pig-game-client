@@ -1,0 +1,7 @@
+# Compiled output
+out/
+
+# IDE specific
+.idea/
+*.iml
+*.xml
