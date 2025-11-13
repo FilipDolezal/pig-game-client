@@ -1,0 +1,18 @@
+package net.ClientMessage;
+
+import net.Protocol;
+
+public class MsgJoin extends ClientMessage {
+    public final String room;
+
+    public MsgJoin(String room) {
+        super(Protocol.ClientCommand.JOIN_ROOM);
+        this.room = room;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "|" +
+                Protocol.K_ROOM + ":" + room;
+    }
+}
