@@ -5,3 +5,4 @@ out/
 .idea/
 *.iml
 *.xml
+!/.idea/runConfigurations/Main.xml
