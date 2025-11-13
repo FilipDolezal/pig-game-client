@@ -2,7 +2,7 @@ package net.ClientMessage;
 
 import net.Protocol;
 
-public class MsgJoin extends ClientMessage {
+public class MsgJoin extends ClientMessageLobby {
     public final String room;
 
     public MsgJoin(String room) {
