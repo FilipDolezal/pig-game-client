@@ -1,6 +1,10 @@
 package controller;
 
+import model.GameRoom.GameRoom;
+import model.GameRoom.GameRoomStatus;
+import model.GameRoom.GameRooms;
 import net.Client;
+import net.ClientMessage.MsgListRooms;
 import net.ClientMessage.MsgLogin;
 import net.ServerMessage;
 import net.Protocol;
@@ -13,6 +17,9 @@ public class NetworkController {
     private Client client;
     private MainFrame mainFrame;
     private ViewController viewController;
+    private GameRooms gameRooms;
+    private int maxPlayers;
+    private int maxRooms;
 
     public NetworkController(MainFrame mainFrame, ViewController viewController) {
         this.client = new Client();
@@ -37,6 +44,10 @@ public class NetworkController {
         }
     }
 
+    public void sendListRooms() {
+        client.sendMessage(new MsgListRooms());
+    }
+
     private void listenForMessages() {
         try {
             String fromServer;
@@ -56,6 +67,14 @@ public class NetworkController {
 
     private void handleServerMessage(ServerMessage message) {
         switch (message.cmd) {
+            case WELCOME:
+                maxPlayers = Integer.parseInt(message.args.get(Protocol.K_PLAYERS));
+                maxRooms = Integer.parseInt(message.args.get(Protocol.K_ROOMS));
+
+                gameRooms = new GameRooms(maxRooms);
+                mainFrame.getLobbyView().setGameRoomsModel(gameRooms);
+
+                break;
             case OK:
                 // Handle OK message
                 break;
@@ -63,11 +82,13 @@ public class NetworkController {
                 // Handle ERROR message
                 JOptionPane.showMessageDialog(mainFrame, "Error: " + message.args.get(Protocol.K_MSG), "Error", JOptionPane.ERROR_MESSAGE);
                 break;
-            case ROOM_LIST:
-                // Handle ROOM_LIST message
-                // TODO
+            case ROOM_INFO:
+                gameRooms.sync(
+                    Integer.parseInt(message.args.get(Protocol.K_ROOM)),
+                    Integer.parseInt(message.args.get(Protocol.K_COUNT)),
+                    GameRoomStatus.valueOf(message.args.get(Protocol.K_STATE))
+                );
                 break;
-            // TODO: Add cases for other server commands
         }
     }
 }

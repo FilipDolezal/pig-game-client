@@ -20,7 +20,8 @@ public class Client {
     }
 
     public void sendMessage(ClientMessage msg) {
-        out.println(msg.toString());
+        System.out.println("Sending message: " + msg.toString());
+        out.println(msg);
     }
 
     public String readMessage() throws IOException {

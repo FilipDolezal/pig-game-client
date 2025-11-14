@@ -2,13 +2,22 @@ package controller;
 
 import view.MainFrame;
 
+import javax.swing.*;
+
 public class ViewController {
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
     private NetworkController networkController;
+    private final Timer lobbyUpdateTimer;
 
     public ViewController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         addListeners();
+        lobbyUpdateTimer = new Timer(5000, e -> {
+            if (networkController != null) {
+                networkController.sendListRooms();
+            }
+        });
+        lobbyUpdateTimer.setRepeats(true);
     }
 
     public void setNetworkController(NetworkController networkController) {
@@ -22,7 +31,7 @@ public class ViewController {
             String nickname = mainFrame.getLoginView().getNickname();
 
             if (ip.isEmpty() || portStr.isEmpty() || nickname.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(mainFrame, "IP, Port, and Nickname cannot be empty.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(mainFrame, "IP, Port, and Nickname cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -30,17 +39,16 @@ public class ViewController {
                 int port = Integer.parseInt(portStr);
                 if (networkController.connect(ip, port, nickname)) {
                     mainFrame.showView("lobby");
+                    lobbyUpdateTimer.start();
+                    networkController.sendListRooms();
                 }
             } catch (NumberFormatException ex) {
-                javax.swing.JOptionPane.showMessageDialog(mainFrame, "Invalid port number.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(mainFrame, "Invalid port number.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        mainFrame.getLobbyView().getCreateRoomButton().addActionListener(e -> {
-            // TODO: Add logic to create a room
-        });
-
         mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> {
+            lobbyUpdateTimer.stop();
             // TODO: Add logic to join a room
         });
 

@@ -18,7 +18,6 @@ public class Protocol {
         ERROR,
         WELCOME,
         GAME_PAUSED,
-        ROOM_LIST,
         ROOM_INFO,
         JOIN_OK,
         GAME_START,
@@ -45,7 +44,6 @@ public class Protocol {
     public static final String K_MSG = "msg";
     public static final String K_NICK = "nick";
     public static final String K_ROOM = "room";
-    public static final String K_MAX = "max";
     public static final String K_STATE = "state";
     public static final String K_OPP_NICK = "opp_nick";
     public static final String K_YOUR_TURN = "your_turn";
@@ -55,4 +53,6 @@ public class Protocol {
     public static final String K_CURRENT = "current";
     public static final String K_COUNT = "count";
     public static final String K_ROLL = "roll";
+    public static final String K_PLAYERS = "players";
+    public static final String K_ROOMS = "rooms";
 }
