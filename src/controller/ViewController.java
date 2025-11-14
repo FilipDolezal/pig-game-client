@@ -1,7 +1,9 @@
 package controller;
 
-import model.GameRoom.GameRooms;
-import model.GameRoom.GameRoomStatus;
+import model.room.GameRooms;
+import model.room.GameRoomStatus;
+import model.player.Player;
+import model.player.PlayerState;
 import view.MainFrame;
 
 import javax.swing.*;
@@ -9,32 +11,37 @@ import javax.swing.*;
 public class ViewController implements NetworkToViewInterface {
     private final MainFrame mainFrame;
     private ViewToNetworkInterface networkController;
-    private final Timer lobbyUpdateTimer;
     private GameRooms gameRooms;
+    private Player player;
 
     public ViewController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         addListeners();
-        lobbyUpdateTimer = new Timer(5000, e -> {
-            if (networkController != null) {
-                networkController.sendListRooms();
-            }
-        });
-        lobbyUpdateTimer.setRepeats(true);
     }
 
     public void setNetworkController(ViewToNetworkInterface networkController) {
         this.networkController = networkController;
     }
 
+    @Override
     public void initializeGameRooms(int maxRooms) {
         this.gameRooms = new GameRooms(maxRooms);
         mainFrame.getLobbyView().setGameRoomsModel(gameRooms);
     }
 
+    @Override
     public void syncGameRoom(int id, int count, GameRoomStatus status) {
         if (gameRooms != null) {
             gameRooms.sync(id, count, status);
+        }
+    }
+
+    @Override
+    public void joinGameRoom(int id) {
+        if (player != null) {
+            player.setCurrentRoomId(id);
+            player.setState(PlayerState.IN_GAME);
+            mainFrame.showView("game");
         }
     }
 
@@ -44,7 +51,6 @@ public class ViewController implements NetworkToViewInterface {
 
     private void addListeners() {
         mainFrame.getLoginView().getLoginButton().addActionListener(e -> handleLoginAction());
-
         mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());
 
         mainFrame.getGameView().getRollButton().addActionListener(e -> {
@@ -63,8 +69,6 @@ public class ViewController implements NetworkToViewInterface {
             return;
         }
         networkController.sendJoinRoom(selectedRoomId);
-        // Further logic to handle server response (e.g., switch to game view) will be handled by NetworkController
-        // and delegated back to ViewController via NetworkToViewInterface methods.
     }
 
     private void handleLoginAction() {
@@ -80,9 +84,8 @@ public class ViewController implements NetworkToViewInterface {
         try {
             int port = Integer.parseInt(portStr);
             if (networkController.connect(ip, port, nickname)) {
+                this.player = new Player(nickname); // Initialize player here
                 mainFrame.showView("lobby");
-                lobbyUpdateTimer.start();
-                networkController.sendListRooms();
             }
         } catch (NumberFormatException ex) {
             showErrorMessage("Error", "Invalid port number.");

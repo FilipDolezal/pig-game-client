@@ -1,4 +1,4 @@
-package model.GameRoom;
+package model.room;
 
 public class GameRoom {
     private final int id;

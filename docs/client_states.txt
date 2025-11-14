@@ -7,11 +7,11 @@ logging in:
         1) login <nick> -> LOGGED IN / LOBBY
         2) quit -> DISCONNECTED
         3) resume -> IN GAME
-            -   returns a player to the unfinished game that he lost connection with
-            -   after confirmation if player wants to return (else end game)
+            -   returns a model.player to the unfinished game that he lost connection with
+            -   after confirmation if model.player wants to return (else end game)
 
 joining game:
-    1) AWAITING GAME - once joined a room, awaiting other player / game start
+    1) AWAITING GAME - once joined a room, awaiting other model.player / game start
     2) IN GAME - once game has started
 
     actions:

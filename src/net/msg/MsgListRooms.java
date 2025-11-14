@@ -1,4 +1,4 @@
-package net.ClientMessage;
+package net.msg;
 
 import net.Protocol;
 

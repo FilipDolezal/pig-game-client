@@ -1,10 +1,10 @@
 package controller;
 
-import model.GameRoom.GameRoomStatus;
+import model.room.GameRoomStatus;
 import net.Client;
-import net.ClientMessage.MsgListRooms;
-import net.ClientMessage.MsgLogin;
-import net.ClientMessage.MsgJoinRoom;
+import net.msg.MsgListRooms;
+import net.msg.MsgLogin;
+import net.msg.MsgJoinRoom;
 import net.ServerMessage;
 import net.Protocol;
 
@@ -72,7 +72,6 @@ public class NetworkController implements ViewToNetworkInterface {
                 maxPlayers = Integer.parseInt(message.args.get(Protocol.K_PLAYERS));
                 maxRooms = Integer.parseInt(message.args.get(Protocol.K_ROOMS));
                 view.initializeGameRooms(maxRooms);
-
                 break;
             case OK:
                 // Handle OK message
@@ -88,6 +87,9 @@ public class NetworkController implements ViewToNetworkInterface {
                     GameRoomStatus.valueOf(message.args.get(Protocol.K_STATE))
                 );
                 break;
+            case JOIN_OK:
+                int room = Integer.parseInt(message.args.get(Protocol.K_ROOM));
+                view.joinGameRoom(room);
         }
     }
 }

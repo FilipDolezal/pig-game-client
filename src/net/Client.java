@@ -1,6 +1,6 @@
 package net;
 
-import net.ClientMessage.ClientMessage;
+import net.msg.ClientMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;

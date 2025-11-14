@@ -1,6 +1,6 @@
 package view;
 
-import model.GameRoom.GameRooms;
+import model.room.GameRooms;
 
 import javax.swing.*;
 import java.awt.*;
