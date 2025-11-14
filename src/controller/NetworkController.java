@@ -4,6 +4,7 @@ import model.GameRoom.GameRoomStatus;
 import net.Client;
 import net.ClientMessage.MsgListRooms;
 import net.ClientMessage.MsgLogin;
+import net.ClientMessage.MsgJoinRoom;
 import net.ServerMessage;
 import net.Protocol;
 
@@ -42,6 +43,11 @@ public class NetworkController implements ViewToNetworkInterface {
         client.sendMessage(new MsgListRooms());
     }
 
+    @Override
+    public void sendJoinRoom(int roomId) {
+        client.sendMessage(new MsgJoinRoom(roomId));
+    }
+
     private void listenForMessages() {
         try {
             String fromServer;
@@ -60,6 +66,7 @@ public class NetworkController implements ViewToNetworkInterface {
     }
 
     private void handleServerMessage(ServerMessage message) {
+        System.out.println(message);
         switch (message.cmd) {
             case WELCOME:
                 maxPlayers = Integer.parseInt(message.args.get(Protocol.K_PLAYERS));

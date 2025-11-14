@@ -4,6 +4,7 @@ import net.Protocol.ServerCommand;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class ServerMessage {
@@ -41,5 +42,23 @@ public class ServerMessage {
             // Handle unknown commands
             return null;
         }
+    }
+
+    @Override
+    public String toString() {
+        if (args.isEmpty())
+        {
+            return cmd.toString();
+        }
+
+        return String.format(
+            "%s|%s",
+            cmd.toString(),
+            args
+                .entrySet()
+                .stream()
+                .map(e -> String.format("%s:%s", e.getKey(), e.getValue()))
+                .collect(Collectors.joining("|"))
+        );
     }
 }

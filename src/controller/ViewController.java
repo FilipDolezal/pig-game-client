@@ -45,10 +45,7 @@ public class ViewController implements NetworkToViewInterface {
     private void addListeners() {
         mainFrame.getLoginView().getLoginButton().addActionListener(e -> handleLoginAction());
 
-        mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> {
-            lobbyUpdateTimer.stop();
-            // TODO: Add logic to join a room
-        });
+        mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());
 
         mainFrame.getGameView().getRollButton().addActionListener(e -> {
             // TODO: Add logic to roll the dice
@@ -57,6 +54,17 @@ public class ViewController implements NetworkToViewInterface {
         mainFrame.getGameView().getHoldButton().addActionListener(e -> {
             // TODO: Add logic to hold
         });
+    }
+
+    private void handleJoinRoomAction() {
+        int selectedRoomId = mainFrame.getLobbyView().getSelectedRoomId();
+        if (selectedRoomId == -1) {
+            showErrorMessage("Join Room Error", "Please select a room to join.");
+            return;
+        }
+        networkController.sendJoinRoom(selectedRoomId);
+        // Further logic to handle server response (e.g., switch to game view) will be handled by NetworkController
+        // and delegated back to ViewController via NetworkToViewInterface methods.
     }
 
     private void handleLoginAction() {

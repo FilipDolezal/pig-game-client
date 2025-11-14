@@ -33,4 +33,16 @@ public class LobbyView extends JPanel {
     public JTable getRoomTable() {
         return roomTable;
     }
+
+    public int getSelectedRoomId() {
+        int selectedRow = roomTable.getSelectedRow();
+        if (selectedRow != -1) {
+            // Assuming Room ID is in the first column (index 0)
+            Object roomId = roomTable.getModel().getValueAt(selectedRow, 0);
+            if (roomId instanceof Integer) {
+                return (Integer) roomId;
+            }
+        }
+        return -1; // No room selected or invalid ID
+    }
 }
