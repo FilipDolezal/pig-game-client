@@ -17,10 +17,22 @@ public class ViewController {
 
     private void addListeners() {
         mainFrame.getLoginView().getLoginButton().addActionListener(e -> {
+            String ip = mainFrame.getLoginView().getIp();
+            String portStr = mainFrame.getLoginView().getPort();
             String nickname = mainFrame.getLoginView().getNickname();
-            if (!nickname.isEmpty()) {
-                networkController.connect("172.31.232.122", 12345, nickname);
-                mainFrame.showView("lobby");
+
+            if (ip.isEmpty() || portStr.isEmpty() || nickname.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(mainFrame, "IP, Port, and Nickname cannot be empty.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                int port = Integer.parseInt(portStr);
+                if (networkController.connect(ip, port, nickname)) {
+                    mainFrame.showView("lobby");
+                }
+            } catch (NumberFormatException ex) {
+                javax.swing.JOptionPane.showMessageDialog(mainFrame, "Invalid port number.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         });
 

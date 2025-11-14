@@ -20,15 +20,20 @@ public class NetworkController {
         this.viewController = viewController;
     }
 
-    public void connect(String ip, int port, String nickname) {
+    public boolean connect(String ip, int port, String nickname) {
         try {
             client.connect(ip, port);
             client.sendMessage(new MsgLogin(nickname));
             // Start a new thread to listen for messages from the server
             new Thread(this::listenForMessages).start();
+            return true;
         } catch (IOException e) {
             // TODO: Handle connection error
             e.printStackTrace();
+            SwingUtilities.invokeLater(() ->
+                    JOptionPane.showMessageDialog(mainFrame, "Connection failed: " + e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE)
+            );
+            return false;
         }
     }
 
