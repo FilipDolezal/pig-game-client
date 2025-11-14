@@ -4,10 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LoginView extends JPanel {
-    private JTextField ipField;
-    private JTextField portField;
-    private JTextField nicknameField;
-    private JButton loginButton;
+    private final JTextField ipField;
+    private final JTextField portField;
+    private final JTextField nicknameField;
+    private final JButton loginButton;
 
     public LoginView() {
         setLayout(new GridBagLayout());

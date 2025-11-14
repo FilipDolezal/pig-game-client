@@ -1,13 +1,16 @@
 package controller;
 
+import model.GameRoom.GameRooms;
+import model.GameRoom.GameRoomStatus;
 import view.MainFrame;
 
 import javax.swing.*;
 
-public class ViewController {
+public class ViewController implements NetworkToViewInterface {
     private final MainFrame mainFrame;
-    private NetworkController networkController;
+    private ViewToNetworkInterface networkController;
     private final Timer lobbyUpdateTimer;
+    private GameRooms gameRooms;
 
     public ViewController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -20,32 +23,27 @@ public class ViewController {
         lobbyUpdateTimer.setRepeats(true);
     }
 
-    public void setNetworkController(NetworkController networkController) {
+    public void setNetworkController(ViewToNetworkInterface networkController) {
         this.networkController = networkController;
     }
 
+    public void initializeGameRooms(int maxRooms) {
+        this.gameRooms = new GameRooms(maxRooms);
+        mainFrame.getLobbyView().setGameRoomsModel(gameRooms);
+    }
+
+    public void syncGameRoom(int id, int count, GameRoomStatus status) {
+        if (gameRooms != null) {
+            gameRooms.sync(id, count, status);
+        }
+    }
+
+    public void showErrorMessage(String title, String message) {
+        JOptionPane.showMessageDialog(mainFrame, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+
     private void addListeners() {
-        mainFrame.getLoginView().getLoginButton().addActionListener(e -> {
-            String ip = mainFrame.getLoginView().getIp();
-            String portStr = mainFrame.getLoginView().getPort();
-            String nickname = mainFrame.getLoginView().getNickname();
-
-            if (ip.isEmpty() || portStr.isEmpty() || nickname.isEmpty()) {
-                JOptionPane.showMessageDialog(mainFrame, "IP, Port, and Nickname cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            try {
-                int port = Integer.parseInt(portStr);
-                if (networkController.connect(ip, port, nickname)) {
-                    mainFrame.showView("lobby");
-                    lobbyUpdateTimer.start();
-                    networkController.sendListRooms();
-                }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(mainFrame, "Invalid port number.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        mainFrame.getLoginView().getLoginButton().addActionListener(e -> handleLoginAction());
 
         mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> {
             lobbyUpdateTimer.stop();
@@ -59,5 +57,27 @@ public class ViewController {
         mainFrame.getGameView().getHoldButton().addActionListener(e -> {
             // TODO: Add logic to hold
         });
+    }
+
+    private void handleLoginAction() {
+        String ip = mainFrame.getLoginView().getIp();
+        String portStr = mainFrame.getLoginView().getPort();
+        String nickname = mainFrame.getLoginView().getNickname();
+
+        if (ip.isEmpty() || portStr.isEmpty() || nickname.isEmpty()) {
+            showErrorMessage("Error", "IP, Port, and Nickname cannot be empty.");
+            return;
+        }
+
+        try {
+            int port = Integer.parseInt(portStr);
+            if (networkController.connect(ip, port, nickname)) {
+                mainFrame.showView("lobby");
+                lobbyUpdateTimer.start();
+                networkController.sendListRooms();
+            }
+        } catch (NumberFormatException ex) {
+            showErrorMessage("Error", "Invalid port number.");
+        }
     }
 }

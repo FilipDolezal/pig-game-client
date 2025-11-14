@@ -9,7 +9,7 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             MainFrame mainFrame = new MainFrame();
             ViewController viewController = new ViewController(mainFrame);
-            NetworkController networkController = new NetworkController(mainFrame, viewController);
+            NetworkController networkController = new NetworkController(viewController);
             viewController.setNetworkController(networkController);
             mainFrame.setVisible(true);
         });

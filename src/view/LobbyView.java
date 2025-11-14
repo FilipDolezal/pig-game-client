@@ -3,12 +3,11 @@ package view;
 import model.GameRoom.GameRooms;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class LobbyView extends JPanel {
-    private JTable roomTable;
-    private JButton joinRoomButton;
+    private final JTable roomTable;
+    private final JButton joinRoomButton;
 
     public LobbyView() {
         setLayout(new BorderLayout());

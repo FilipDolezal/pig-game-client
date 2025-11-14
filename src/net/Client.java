@@ -20,7 +20,6 @@ public class Client {
     }
 
     public void sendMessage(ClientMessage msg) {
-        System.out.println("Sending message: " + msg.toString());
         out.println(msg);
     }
 

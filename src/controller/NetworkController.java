@@ -1,30 +1,24 @@
 package controller;
 
-import model.GameRoom.GameRoom;
 import model.GameRoom.GameRoomStatus;
-import model.GameRoom.GameRooms;
 import net.Client;
 import net.ClientMessage.MsgListRooms;
 import net.ClientMessage.MsgLogin;
 import net.ServerMessage;
 import net.Protocol;
-import view.MainFrame;
 
 import javax.swing.*;
 import java.io.IOException;
 
-public class NetworkController {
-    private Client client;
-    private MainFrame mainFrame;
-    private ViewController viewController;
-    private GameRooms gameRooms;
+public class NetworkController implements ViewToNetworkInterface {
+    private final Client client;
+    private final NetworkToViewInterface view;
     private int maxPlayers;
     private int maxRooms;
 
-    public NetworkController(MainFrame mainFrame, ViewController viewController) {
+    public NetworkController(ViewController viewController) {
         this.client = new Client();
-        this.mainFrame = mainFrame;
-        this.viewController = viewController;
+        this.view = viewController;
     }
 
     public boolean connect(String ip, int port, String nickname) {
@@ -38,7 +32,7 @@ public class NetworkController {
             // TODO: Handle connection error
             e.printStackTrace();
             SwingUtilities.invokeLater(() ->
-                    JOptionPane.showMessageDialog(mainFrame, "Connection failed: " + e.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE)
+                    view.showErrorMessage("Connection Error", "Connection failed: " + e.getMessage())
             );
             return false;
         }
@@ -70,9 +64,7 @@ public class NetworkController {
             case WELCOME:
                 maxPlayers = Integer.parseInt(message.args.get(Protocol.K_PLAYERS));
                 maxRooms = Integer.parseInt(message.args.get(Protocol.K_ROOMS));
-
-                gameRooms = new GameRooms(maxRooms);
-                mainFrame.getLobbyView().setGameRoomsModel(gameRooms);
+                view.initializeGameRooms(maxRooms);
 
                 break;
             case OK:
@@ -80,10 +72,10 @@ public class NetworkController {
                 break;
             case ERROR:
                 // Handle ERROR message
-                JOptionPane.showMessageDialog(mainFrame, "Error: " + message.args.get(Protocol.K_MSG), "Error", JOptionPane.ERROR_MESSAGE);
+                view.showErrorMessage("Error", "Error: " + message.args.get(Protocol.K_MSG));
                 break;
             case ROOM_INFO:
-                gameRooms.sync(
+                view.syncGameRoom(
                     Integer.parseInt(message.args.get(Protocol.K_ROOM)),
                     Integer.parseInt(message.args.get(Protocol.K_COUNT)),
                     GameRoomStatus.valueOf(message.args.get(Protocol.K_STATE))
