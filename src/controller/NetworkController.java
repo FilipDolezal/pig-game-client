@@ -51,20 +51,16 @@ public class NetworkController {
 
     private void handleServerMessage(ServerMessage message) {
         switch (message.cmd) {
-            case Protocol.ServerCommand.OK:
+            case OK:
                 // Handle OK message
                 break;
-            case Protocol.ServerCommand.ERROR:
+            case ERROR:
                 // Handle ERROR message
-                JOptionPane.showMessageDialog(mainFrame, "Error: " + String.join(" ", message.args()), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(mainFrame, "Error: " + message.args.get(Protocol.K_MSG), "Error", JOptionPane.ERROR_MESSAGE);
                 break;
-            case Protocol.ServerCommand.ROOM_LIST:
+            case ROOM_LIST:
                 // Handle ROOM_LIST message
-                DefaultListModel<String> model = (DefaultListModel<String>) mainFrame.getLobbyView().getRoomList().getModel();
-                model.clear();
-                for (String room : message.args) {
-                    model.addElement(room);
-                }
+                // TODO
                 break;
             // TODO: Add cases for other server commands
         }

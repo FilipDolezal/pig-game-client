@@ -19,7 +19,7 @@ public class ViewController {
         mainFrame.getLoginView().getLoginButton().addActionListener(e -> {
             String nickname = mainFrame.getLoginView().getNickname();
             if (!nickname.isEmpty()) {
-                networkController.connect("localhost", 12345, nickname);
+                networkController.connect("172.31.232.122", 12345, nickname);
                 mainFrame.showView("lobby");
             }
         });
