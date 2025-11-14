@@ -10,6 +10,7 @@ public class GameView extends JPanel {
     private JLabel turnTotalLabel;
     private JButton rollButton;
     private JButton holdButton;
+    private JButton quitButton;
 
     public GameView() {
         setLayout(new BorderLayout());
@@ -40,8 +41,10 @@ public class GameView extends JPanel {
         JPanel buttonPanel = new JPanel();
         rollButton = new JButton("Roll");
         holdButton = new JButton("Hold");
+        this.quitButton = new JButton("Quit"); // Assign to class member
         buttonPanel.add(rollButton);
         buttonPanel.add(holdButton);
+        buttonPanel.add(quitButton); // Add Quit button to panel
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -67,5 +70,9 @@ public class GameView extends JPanel {
 
     public JButton getHoldButton() {
         return holdButton;
+    }
+
+    public JButton getQuitButton() {
+        return quitButton;
     }
 }

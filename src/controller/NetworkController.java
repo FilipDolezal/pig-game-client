@@ -5,6 +5,7 @@ import net.Client;
 import net.msg.MsgListRooms;
 import net.msg.MsgLogin;
 import net.msg.MsgJoinRoom;
+import net.msg.MsgQuit;
 import net.ServerMessage;
 import net.Protocol;
 
@@ -46,6 +47,11 @@ public class NetworkController implements ViewToNetworkInterface {
     @Override
     public void sendJoinRoom(int roomId) {
         client.sendMessage(new MsgJoinRoom(roomId));
+    }
+
+    @Override
+    public void sendQuitGame() {
+        client.sendMessage(new MsgQuit());
     }
 
     private void listenForMessages() {

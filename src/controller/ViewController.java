@@ -60,6 +60,24 @@ public class ViewController implements NetworkToViewInterface {
         mainFrame.getGameView().getHoldButton().addActionListener(e -> {
             // TODO: Add logic to hold
         });
+        mainFrame.getGameView().getQuitButton().addActionListener(e -> handleQuitGameAction());
+    }
+
+    private void handleQuitGameAction() {
+        int confirm = JOptionPane.showConfirmDialog(
+            mainFrame,
+            "Are you sure you want to quit? Your opponent will win, and this action cannot be undone.",
+            "Confirm Quit",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            networkController.sendQuitGame();
+            mainFrame.showView("lobby");
+            player.setState(PlayerState.LOBBY);
+            player.setCurrentRoomId(-1);
+        }
     }
 
     private void handleJoinRoomAction() {
