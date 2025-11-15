@@ -9,6 +9,7 @@ import net.msg.MsgLeaveRoom;
 import net.msg.MsgQuit;
 import net.msg.MsgRoll;
 import net.msg.MsgHold;
+import net.msg.MsgExit;
 import net.ServerMessage;
 import net.Protocol;
 
@@ -70,6 +71,11 @@ public class NetworkController implements ViewToNetworkInterface {
 	@Override
 	public void sendHold() {
 		client.sendMessage(new MsgHold());
+	}
+
+	@Override
+	public void sendExit() {
+		client.sendMessage(new MsgExit());
 	}
 
 	private void listenForMessages() {

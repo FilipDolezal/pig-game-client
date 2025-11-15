@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainFrame extends JFrame {
     private CardLayout cardLayout;
@@ -12,7 +14,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setTitle("Pig Game");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // We'll handle closing
         setSize(800, 600);
         setLocationRelativeTo(null);
 
@@ -47,5 +49,14 @@ public class MainFrame extends JFrame {
 
     public void showView(String name) {
         cardLayout.show(mainPanel, name);
+    }
+
+    public void setCloseAction(Runnable action) {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                action.run();
+            }
+        });
     }
 }

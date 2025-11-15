@@ -89,6 +89,7 @@ public class ViewController implements NetworkToViewInterface {
     private void addListeners() {
         mainFrame.getLoginView().getLoginButton().addActionListener(e -> handleLoginAction());
         mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());
+        mainFrame.getLobbyView().getExitButton().addActionListener(e -> handleExitAction());
 
         mainFrame.getGameView().getRollButton().addActionListener(e -> {
             if (networkController != null) {
@@ -158,5 +159,14 @@ public class ViewController implements NetworkToViewInterface {
         } catch (NumberFormatException ex) {
             showErrorMessage("Error", "Invalid port number.");
         }
+    }
+
+    public void handleExitAction() {
+        if (networkController != null) {
+            networkController.sendExit();
+        }
+        this.player = null;
+        this.gameRooms = null;
+        mainFrame.showView("login");
     }
 }

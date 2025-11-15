@@ -8,4 +8,5 @@ public interface ViewToNetworkInterface {
     void sendLeaveRoom();
     void sendRoll();
     void sendHold();
+    void sendExit();
 }

@@ -8,14 +8,24 @@ import java.awt.*;
 public class LobbyView extends JPanel {
     private final JTable roomTable;
     private final JButton joinRoomButton;
+    private final JButton exitButton;
 
     public LobbyView() {
         setLayout(new BorderLayout());
 
+        // Top panel for exit button
+        exitButton = new JButton("EXIT");
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topPanel.add(exitButton);
+        add(topPanel, BorderLayout.NORTH);
+
+        // Center table
         roomTable = new JTable();
+        roomTable.setRowHeight(30); // Make rows taller
         JScrollPane scrollPane = new JScrollPane(roomTable);
         add(scrollPane, BorderLayout.CENTER);
 
+        // Bottom panel for join button
         JPanel buttonPanel = new JPanel();
         joinRoomButton = new JButton("Join Room");
         buttonPanel.add(joinRoomButton);
@@ -28,6 +38,10 @@ public class LobbyView extends JPanel {
 
     public JButton getJoinRoomButton() {
         return joinRoomButton;
+    }
+
+    public JButton getExitButton() {
+        return exitButton;
     }
 
     public JTable getRoomTable() {
