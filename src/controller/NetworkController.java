@@ -108,6 +108,17 @@ public class NetworkController implements ViewToNetworkInterface {
 					Boolean.parseBoolean(message.args.get(Protocol.K_YOUR_TURN))
 				);
 				break;
+
+			case GAME_STATE:
+				System.out.println("REC: " + message);
+				view.gameState(
+					Integer.parseInt(message.args.get(Protocol.K_MY_SCORE)),
+					Integer.parseInt(message.args.get(Protocol.K_OPP_SCORE)),
+					Integer.parseInt(message.args.get(Protocol.K_TURN_SCORE)),
+					Integer.parseInt(message.args.get(Protocol.K_ROLL)),
+					Integer.parseInt(message.args.get(Protocol.K_YOUR_TURN)) == 1
+				);
+				break;
 		}
 	}
 }

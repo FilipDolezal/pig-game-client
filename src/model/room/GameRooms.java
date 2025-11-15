@@ -21,10 +21,6 @@ public class GameRooms extends AbstractTableModel {
         fireTableRowsUpdated(id, id);
     }
 
-    public void start(int id) {
-        rooms.get(id).updateStatus(G);
-    }
-
     @Override
     public int getRowCount() {
         return rooms.size();

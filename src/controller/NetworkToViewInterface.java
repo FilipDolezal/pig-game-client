@@ -16,4 +16,6 @@ public interface NetworkToViewInterface {
 
     /** response to GAME_START */
     void startGame(String oppNick, boolean turn);
+
+    void gameState(int myScore, int oppScore, int turnScore, int roll, boolean turn);
 }
