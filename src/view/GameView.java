@@ -209,5 +209,28 @@ public class GameView extends JPanel {
     public JButton getQuitButton() {
         return quitButton;
     }
+
+    public void resetView() {
+        playerTotalScoreLabel.setText("Your Score: 0");
+        opponentTotalScoreLabel.setText("Score: 0");
+        playerTurnScoreValueLabel.setText("0");
+        opponentTurnScoreLabel.setText("Turn: 0");
+        playerRollLabel.setText("You rolled: -");
+        opponentRollLabel.setText("Rolled: -");
+
+        opponentBorder.setTitle("Opponent");
+
+        // Reset highlighting
+        playerPanel.setBackground(inactiveBackgroundColor);
+        playerBorder.setTitleColor(inactiveTitleColor);
+        opponentPanel.setBackground(inactiveBackgroundColor);
+        opponentBorder.setTitleColor(inactiveTitleColor);
+
+        rollButton.setEnabled(false);
+        holdButton.setEnabled(false);
+
+        playerPanel.repaint();
+        opponentPanel.repaint();
+    }
 }
 

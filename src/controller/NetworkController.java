@@ -131,6 +131,14 @@ public class NetworkController implements ViewToNetworkInterface {
 					Integer.parseInt(message.args.get(Protocol.K_YOUR_TURN)) == 1
 				);
 				break;
+
+			case GAME_WIN:
+				view.showGameWon(message.args.get(Protocol.K_MSG));
+				break;
+
+			case GAME_LOSE:
+				view.showGameLost(message.args.get(Protocol.K_MSG));
+				break;
 		}
 	}
 }

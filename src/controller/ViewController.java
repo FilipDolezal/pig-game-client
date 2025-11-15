@@ -55,6 +55,30 @@ public class ViewController implements NetworkToViewInterface {
         mainFrame.getGameView().gameState(myScore, oppScore, turnScore, roll, turn);
     }
 
+    @Override
+    public void showGameWon(String message) {
+        JOptionPane.showMessageDialog(mainFrame, message, "You Won!", JOptionPane.INFORMATION_MESSAGE);
+        returnToLobby();
+    }
+
+    @Override
+    public void showGameLost(String message) {
+        JOptionPane.showMessageDialog(mainFrame, message, "You Lost", JOptionPane.WARNING_MESSAGE);
+        returnToLobby();
+    }
+
+    private void returnToLobby() {
+        if (player != null) {
+            player.setState(PlayerState.LOBBY);
+            player.setCurrentRoomId(-1);
+        }
+        mainFrame.getGameView().resetView();
+        mainFrame.showView("lobby");
+        if (networkController != null) {
+            networkController.sendListRooms();
+        }
+    }
+
     public void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(mainFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }

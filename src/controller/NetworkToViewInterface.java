@@ -18,4 +18,7 @@ public interface NetworkToViewInterface {
     void startGame(String oppNick, boolean turn);
 
     void gameState(int myScore, int oppScore, int turnScore, int roll, boolean turn);
+
+    void showGameWon(String message);
+    void showGameLost(String message);
 }
