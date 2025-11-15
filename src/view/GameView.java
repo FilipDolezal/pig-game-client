@@ -48,6 +48,8 @@ public class GameView extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    // public void gameState()
+
     public void setPlayer1Score(int score) {
         player1ScoreLabel.setText(String.valueOf(score));
     }
@@ -56,8 +58,8 @@ public class GameView extends JPanel {
         player2ScoreLabel.setText(String.valueOf(score));
     }
 
-    public void setTurnLabel(String text) {
-        turnLabel.setText(text);
+    public void gameStart(String oppNick, boolean turn) {
+        turnLabel.setText(turn ? "Your turn" : "Opponent's turn");
     }
 
     public void setTurnTotal(int total) {

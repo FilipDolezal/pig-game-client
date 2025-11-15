@@ -11,9 +11,12 @@ public class GameRoom {
         this.status = status;
     }
 
-    public void update(int count, GameRoomStatus status) {
-        this.count = count;
-        this.status = status;
+    public void updateStatus(GameRoomStatus newStatus) {
+        this.status = newStatus;
+    }
+
+    public void updateCount(int newCount) {
+        this.count = newCount;
     }
 
     public int getId() {

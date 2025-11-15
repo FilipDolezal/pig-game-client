@@ -16,8 +16,13 @@ public class GameRooms extends AbstractTableModel {
     }
 
     public void sync(int id, int count, GameRoomStatus status) {
-        rooms.get(id).update(count, status);
+        rooms.get(id).updateCount(count);
+        rooms.get(id).updateStatus(status);
         fireTableRowsUpdated(id, id);
+    }
+
+    public void start(int id) {
+        rooms.get(id).updateStatus(G);
     }
 
     @Override

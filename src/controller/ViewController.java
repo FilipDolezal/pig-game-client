@@ -45,6 +45,11 @@ public class ViewController implements NetworkToViewInterface {
         }
     }
 
+    @Override
+    public void startGame(String oppNick, boolean turn) {
+        mainFrame.getGameView().gameStart(oppNick, turn);
+    }
+
     public void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(mainFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }

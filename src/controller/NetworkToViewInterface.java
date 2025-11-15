@@ -13,4 +13,7 @@ public interface NetworkToViewInterface {
 
     /** response to JOIN_ROOM */
     void joinGameRoom(int id);
+
+    /** response to GAME_START */
+    void startGame(String oppNick, boolean turn);
 }
