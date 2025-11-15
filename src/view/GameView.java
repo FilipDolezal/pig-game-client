@@ -1,7 +1,6 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
@@ -18,6 +17,7 @@ public class GameView extends JPanel {
     private JPanel playerPanel;
     private JLabel playerTotalScoreLabel;
     private JLabel playerTurnScoreValueLabel; // The big one
+    private JLabel playerRollLabel;
     private TitledBorder playerBorder;
 
     // Game action components
@@ -26,8 +26,11 @@ public class GameView extends JPanel {
     private JButton quitButton;
 
     // Colors for highlighting
-    private final Color activeTurnColor = Color.GREEN;
-    private final Color inactiveTurnColor = Color.LIGHT_GRAY;
+    private final Color activeTitleColor = Color.BLACK;
+    private final Color inactiveTitleColor = Color.GRAY;
+    private final Color activeBackgroundColor = new Color(220, 255, 220); // Light green
+    private final Color inactiveBackgroundColor = UIManager.getColor("Panel.background");
+
 
     public GameView() {
         super(new BorderLayout());
@@ -55,6 +58,7 @@ public class GameView extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         opponentBorder = BorderFactory.createTitledBorder("Opponent");
+        opponentBorder.setTitleFont(new Font("Arial", Font.BOLD, 16));
         panel.setBorder(opponentBorder);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -83,6 +87,7 @@ public class GameView extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         playerBorder = BorderFactory.createTitledBorder("You");
+        playerBorder.setTitleFont(new Font("Arial", Font.BOLD, 16));
         panel.setBorder(playerBorder);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -105,13 +110,19 @@ public class GameView extends JPanel {
         gbc.gridy = 2;
         panel.add(playerTurnScoreValueLabel, gbc);
 
+        playerRollLabel = new JLabel("You rolled: -");
+        playerRollLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        gbc.gridy = 3;
+        panel.add(playerRollLabel, gbc);
+
         // Buttons
         rollButton = new JButton("Roll");
         holdButton = new JButton("Hold");
         JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setOpaque(false);
         buttonPanel.add(rollButton);
         buttonPanel.add(holdButton);
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         panel.add(buttonPanel, gbc);
 
         return panel;
@@ -127,14 +138,43 @@ public class GameView extends JPanel {
         playerTotalScoreLabel.setText("Your Score: " + myScore);
         opponentTotalScoreLabel.setText("Score: " + oppScore);
 
+        // Reset conditional labels
+        playerRollLabel.setText("You rolled: -");
+        opponentRollLabel.setText("Rolled: -");
+
         if (isPlayerTurn) {
+            // It's my turn.
             playerTurnScoreValueLabel.setText(String.valueOf(turnScore));
             opponentTurnScoreLabel.setText("Turn: 0");
-            opponentRollLabel.setText("Rolled: -");
-        } else {
+
+            if (turnScore == 0) { // My turn is just starting
+                // Opponent's turn just ended. How?
+                if (roll == 1) {
+                    opponentRollLabel.setText("Opponent BUST");
+                } else if (roll == 0) {
+                    opponentRollLabel.setText("Opponent held");
+                }
+            } else { // My turn is in progress
+                if (roll > 1) {
+                    playerRollLabel.setText("You rolled: " + roll);
+                }
+            }
+        } else { // It's opponent's turn.
             opponentTurnScoreLabel.setText("Turn: " + turnScore);
-            opponentRollLabel.setText("Rolled: " + roll);
             playerTurnScoreValueLabel.setText("0");
+
+            if (turnScore == 0) { // Opponent's turn is just starting
+                // My turn just ended. How?
+                if (roll == 1) {
+                    playerRollLabel.setText("You BUST");
+                } else if (roll == 0) {
+                    playerRollLabel.setText("You held");
+                }
+            } else { // Opponent's turn is in progress
+                if (roll > 1) {
+                    opponentRollLabel.setText("Rolled: " + roll);
+                }
+            }
         }
 
         rollButton.setEnabled(isPlayerTurn);
@@ -144,11 +184,15 @@ public class GameView extends JPanel {
 
     private void updateTurnHighlight(boolean isPlayerTurn) {
         if (isPlayerTurn) {
-            playerBorder.setTitleColor(activeTurnColor);
-            opponentBorder.setTitleColor(inactiveTurnColor);
+            playerPanel.setBackground(activeBackgroundColor);
+            playerBorder.setTitleColor(activeTitleColor);
+            opponentPanel.setBackground(inactiveBackgroundColor);
+            opponentBorder.setTitleColor(inactiveTitleColor);
         } else {
-            playerBorder.setTitleColor(inactiveTurnColor);
-            opponentBorder.setTitleColor(activeTurnColor);
+            playerPanel.setBackground(inactiveBackgroundColor);
+            playerBorder.setTitleColor(inactiveTitleColor);
+            opponentPanel.setBackground(activeBackgroundColor);
+            opponentBorder.setTitleColor(activeTitleColor);
         }
         playerPanel.repaint();
         opponentPanel.repaint();

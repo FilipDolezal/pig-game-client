@@ -6,6 +6,8 @@ import net.msg.MsgListRooms;
 import net.msg.MsgLogin;
 import net.msg.MsgJoinRoom;
 import net.msg.MsgQuit;
+import net.msg.MsgRoll;
+import net.msg.MsgHold;
 import net.ServerMessage;
 import net.Protocol;
 
@@ -52,6 +54,16 @@ public class NetworkController implements ViewToNetworkInterface {
 	@Override
 	public void sendQuitGame() {
 		client.sendMessage(new MsgQuit());
+	}
+
+	@Override
+	public void sendRoll() {
+		client.sendMessage(new MsgRoll());
+	}
+
+	@Override
+	public void sendHold() {
+		client.sendMessage(new MsgHold());
 	}
 
 	private void listenForMessages() {
@@ -105,7 +117,7 @@ public class NetworkController implements ViewToNetworkInterface {
 			case GAME_START:
 				view.startGame(
 					message.args.get(Protocol.K_OPP_NICK),
-					Boolean.parseBoolean(message.args.get(Protocol.K_YOUR_TURN))
+					Integer.parseInt(message.args.get(Protocol.K_YOUR_TURN)) == 1
 				);
 				break;
 

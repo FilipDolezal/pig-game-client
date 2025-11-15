@@ -64,11 +64,15 @@ public class ViewController implements NetworkToViewInterface {
         mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());
 
         mainFrame.getGameView().getRollButton().addActionListener(e -> {
-            // TODO: Add logic to roll the dice
+            if (networkController != null) {
+                networkController.sendRoll();
+            }
         });
 
         mainFrame.getGameView().getHoldButton().addActionListener(e -> {
-            // TODO: Add logic to hold
+            if (networkController != null) {
+                networkController.sendHold();
+            }
         });
         mainFrame.getGameView().getQuitButton().addActionListener(e -> handleQuitGameAction());
     }
