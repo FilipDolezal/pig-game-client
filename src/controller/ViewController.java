@@ -40,13 +40,16 @@ public class ViewController implements NetworkToViewInterface {
     public void joinGameRoom(int id) {
         if (player != null) {
             player.setCurrentRoomId(id);
-            player.setState(PlayerState.IN_GAME);
+            player.setState(PlayerState.IN_GAME); // Player is in a room, could be waiting
+            mainFrame.getGameView().showLeaveButton(true);
+            mainFrame.getGameView().setWaitingForOpponent(true);
             mainFrame.showView("game");
         }
     }
 
     @Override
     public void startGame(String oppNick, boolean turn) {
+        mainFrame.getGameView().showLeaveButton(false);
         mainFrame.getGameView().gameStart(oppNick, turn);
     }
 
@@ -99,7 +102,16 @@ public class ViewController implements NetworkToViewInterface {
             }
         });
         mainFrame.getGameView().getQuitButton().addActionListener(e -> handleQuitGameAction());
+        mainFrame.getGameView().getLeaveButton().addActionListener(e -> handleLeaveRoomAction());
     }
+
+    private void handleLeaveRoomAction() {
+        if (networkController != null) {
+            networkController.sendLeaveRoom();
+        }
+        returnToLobby();
+    }
+
 
     private void handleQuitGameAction() {
         int confirm = JOptionPane.showConfirmDialog(

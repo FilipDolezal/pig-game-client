@@ -5,6 +5,7 @@ public interface ViewToNetworkInterface {
     void sendListRooms();
     void sendJoinRoom(int roomId);
     void sendQuitGame();
+    void sendLeaveRoom();
     void sendRoll();
     void sendHold();
 }

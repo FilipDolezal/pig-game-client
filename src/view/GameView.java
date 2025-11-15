@@ -24,6 +24,7 @@ public class GameView extends JPanel {
     private JButton rollButton;
     private JButton holdButton;
     private JButton quitButton;
+    private JButton leaveButton;
 
     // Colors for highlighting
     private final Color activeTitleColor = Color.BLACK;
@@ -47,11 +48,15 @@ public class GameView extends JPanel {
 
         // Top panel for the quit button
         quitButton = new JButton("Quit Game");
+        leaveButton = new JButton("Leave Room");
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topPanel.add(quitButton);
+        topPanel.add(leaveButton);
 
         add(topPanel, BorderLayout.NORTH);
         add(gameArea, BorderLayout.CENTER);
+
+        showLeaveButton(false); // Default to showing quit button
     }
 
     private JPanel createOpponentPanel() {
@@ -129,9 +134,24 @@ public class GameView extends JPanel {
     }
 
     public void gameStart(String opponentNick, boolean isPlayerTurn) {
+        setWaitingForOpponent(false);
         opponentBorder.setTitle(opponentNick);
         updateTurnHighlight(isPlayerTurn);
         opponentPanel.repaint(); // to show the new title
+    }
+
+    public void setWaitingForOpponent(boolean waiting) {
+        if (waiting) {
+            opponentTotalScoreLabel.setText("Waiting for opponent...");
+            opponentTotalScoreLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+            opponentTurnScoreLabel.setVisible(false);
+            opponentRollLabel.setVisible(false);
+        } else {
+            opponentTotalScoreLabel.setText("Score: 0");
+            opponentTotalScoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            opponentTurnScoreLabel.setVisible(true);
+            opponentRollLabel.setVisible(true);
+        }
     }
 
     public void gameState(int myScore, int oppScore, int turnScore, int roll, boolean isPlayerTurn) {
@@ -210,6 +230,15 @@ public class GameView extends JPanel {
         return quitButton;
     }
 
+    public JButton getLeaveButton() {
+        return leaveButton;
+    }
+
+    public void showLeaveButton(boolean show) {
+        leaveButton.setVisible(show);
+        quitButton.setVisible(!show);
+    }
+
     public void resetView() {
         playerTotalScoreLabel.setText("Your Score: 0");
         opponentTotalScoreLabel.setText("Score: 0");
@@ -228,6 +257,12 @@ public class GameView extends JPanel {
 
         rollButton.setEnabled(false);
         holdButton.setEnabled(false);
+        quitButton.setEnabled(true); // Keep it enabled, but it might be hidden
+        leaveButton.setEnabled(true);
+
+        showLeaveButton(false); // Default to showing quit button
+
+        setWaitingForOpponent(false);
 
         playerPanel.repaint();
         opponentPanel.repaint();
