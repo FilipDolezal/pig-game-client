@@ -101,10 +101,27 @@ public class ViewController implements NetworkToViewInterface {
     @Override
     public void resumeGame() {
         mainFrame.getGameView().resumeGame();
+        if (networkController != null) {
+            networkController.sendGameStateRequest();
+        }
     }
 
     public void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(mainFrame, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void showGamePausedDialog() {
+        int dialogResult = JOptionPane.showConfirmDialog(mainFrame,
+                "Your opponent has paused the game. Do you want to resume?",
+                "Game Paused", JOptionPane.YES_NO_OPTION);
+
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            if (networkController != null) {
+                networkController.sendResume();
+                mainFrame.showView("game");
+            }
+        }
     }
 
     private void addListeners() {

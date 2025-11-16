@@ -82,6 +82,11 @@ public class NetworkController implements ViewToNetworkInterface {
 		client.sendMessage(new net.msg.MsgResume());
 	}
 
+	@Override
+	public void sendGameStateRequest() {
+		client.sendMessage(new net.msg.MsgGameStateRequest());
+	}
+
 	private void listenForMessages() {
 		try {
 			String fromServer;
@@ -153,7 +158,6 @@ public class NetworkController implements ViewToNetworkInterface {
 				break;
 
 			case GAME_STATE:
-				System.out.println("REC: " + message);
 				view.gameState(
 					Integer.parseInt(message.args.get(Protocol.K_MY_SCORE)),
 					Integer.parseInt(message.args.get(Protocol.K_OPP_SCORE)),
@@ -172,12 +176,7 @@ public class NetworkController implements ViewToNetworkInterface {
 				break;
 
 			case GAME_PAUSED:
-				int dialogResult = JOptionPane.showConfirmDialog(null,
-						"Your opponent has paused the game. Do you want to resume?",
-						"Game Paused", JOptionPane.YES_NO_OPTION);
-				if (dialogResult == JOptionPane.YES_OPTION) {
-					sendResume();
-				}
+				view.showGamePausedDialog();
 				break;
 		}
 	}

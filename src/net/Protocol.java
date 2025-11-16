@@ -10,7 +10,8 @@ public class Protocol {
         ROLL,
         HOLD,
         QUIT,
-        EXIT;
+        EXIT,
+        GAME_STATE_REQUEST;
 
         public static ClientCommand fromString(String commandText) {
             if (commandText == null) {

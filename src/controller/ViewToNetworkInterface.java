@@ -10,4 +10,5 @@ public interface ViewToNetworkInterface {
     void sendHold();
     void sendExit();
     void sendResume();
+    void sendGameStateRequest();
 }
