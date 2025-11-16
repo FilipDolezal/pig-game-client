@@ -19,6 +19,8 @@ public interface NetworkToViewInterface {
 
     void gameState(int myScore, int oppScore, int turnScore, int roll, boolean turn);
 
+    void login(String username);
+
     void showGameWon(String message);
     void showGameLost(String message);
 }

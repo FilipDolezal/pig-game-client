@@ -10,7 +10,20 @@ public class Protocol {
         ROLL,
         HOLD,
         QUIT,
-        EXIT
+        EXIT;
+
+        public static ClientCommand fromString(String commandText) {
+            if (commandText == null) {
+                return null;
+            }
+
+            for (ClientCommand cmd : ClientCommand.values()) {
+                if (cmd.name().equalsIgnoreCase(commandText)) {
+                    return cmd;
+                }
+            }
+            return null;
+        }
     }
 
     public enum ServerCommand {

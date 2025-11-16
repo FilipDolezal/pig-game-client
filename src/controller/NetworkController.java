@@ -2,6 +2,7 @@ package controller;
 
 import model.room.GameRoomStatus;
 import net.Client;
+import net.Protocol.ClientCommand;
 import net.msg.MsgListRooms;
 import net.msg.MsgLogin;
 import net.msg.MsgJoinRoom;
@@ -27,20 +28,18 @@ public class NetworkController implements ViewToNetworkInterface {
 		this.view = viewController;
 	}
 
-	public boolean connect(String ip, int port, String nickname) {
+	public void connect(String ip, int port, String nickname) {
 		try {
 			client.connect(ip, port);
 			client.sendMessage(new MsgLogin(nickname));
 			// Start a new thread to listen for messages from the server
 			new Thread(this::listenForMessages).start();
-			return true;
 		} catch (IOException e) {
 			// TODO: Handle connection error
 			e.printStackTrace();
 			SwingUtilities.invokeLater(() ->
 				view.showErrorMessage("Connection Error", "Connection failed: " + e.getMessage())
 			);
-			return false;
 		}
 	}
 
@@ -97,6 +96,9 @@ public class NetworkController implements ViewToNetworkInterface {
 
 	private void handleServerMessage(ServerMessage message) {
 		System.out.println(message);
+		ClientCommand clientArgCmd = ClientCommand.fromString(message.args.getOrDefault(Protocol.K_CMD, null));
+		String clientArgMsg = message.args.getOrDefault(Protocol.K_MSG, null);
+
 		switch (message.cmd) {
 			case WELCOME:
 				maxPlayers = Integer.parseInt(message.args.get(Protocol.K_PLAYERS));
@@ -105,19 +107,25 @@ public class NetworkController implements ViewToNetworkInterface {
 				break;
 
 			case OK:
-				// Handle OK message
-				String cmd = message.args.get(Protocol.K_CMD);
-				String msg = message.args.get(Protocol.K_MSG);
-				System.out.println("OK:" + cmd + " " + msg);
+				switch (clientArgCmd)
+				{
+					case LOGIN -> view.login(message.args.get(Protocol.K_NICK));
+					case JOIN_ROOM -> view.joinGameRoom(Integer.parseInt(message.args.get(Protocol.K_ROOM)));
+					/* TODO
+					OK|command:LOGIN
+					OK|command:LEAVE_ROOM
+					OK|command:QUIT
+					OK|command:RESUME
+					 */
+				}
 				break;
 
 			case ERROR:
 				// Handle ERROR message
-				String ecmd = message.args.get(Protocol.K_CMD);
-				String emsg = message.args.get(Protocol.K_MSG);
-				System.out.println("ERR:" + ecmd + " " + emsg);
-
-				view.showErrorMessage("Error", "Error: " + message.args.get(Protocol.K_MSG));
+				switch (clientArgCmd)
+				{
+					default -> view.showErrorMessage("Error", "Error: " + clientArgMsg);
+				}
 				break;
 
 			case ROOM_INFO:
@@ -128,6 +136,7 @@ public class NetworkController implements ViewToNetworkInterface {
 				);
 				break;
 
+				//TODO - replace with OK|cmd:JOIN_ROOM
 			case JOIN_OK:
 				int room = Integer.parseInt(message.args.get(Protocol.K_ROOM));
 				view.joinGameRoom(room);

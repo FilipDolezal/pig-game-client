@@ -70,6 +70,12 @@ public class ViewController implements NetworkToViewInterface {
         returnToLobby();
     }
 
+    @Override
+    public void login(String username) {
+        player = new Player(username);
+        mainFrame.showView("lobby");
+    }
+
     private void returnToLobby() {
         if (player != null) {
             player.setState(PlayerState.LOBBY);
@@ -151,10 +157,7 @@ public class ViewController implements NetworkToViewInterface {
         }
 
         try {
-            int port = Integer.parseInt(portStr);
-            if (networkController.connect(ip, port, nickname)) {
-                this.player = new Player(nickname);
-            }
+			networkController.connect(ip, Integer.parseInt(portStr), nickname);
         } catch (NumberFormatException ex) {
             showErrorMessage("Error", "Invalid port number.");
         }
