@@ -32,7 +32,6 @@ public class Protocol {
         WELCOME,
         GAME_PAUSED,
         ROOM_INFO,
-        JOIN_OK,
         GAME_START,
         GAME_STATE,
         GAME_WIN,

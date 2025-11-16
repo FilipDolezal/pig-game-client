@@ -136,12 +136,6 @@ public class NetworkController implements ViewToNetworkInterface {
 				);
 				break;
 
-				//TODO - replace with OK|cmd:JOIN_ROOM
-			case JOIN_OK:
-				int room = Integer.parseInt(message.args.get(Protocol.K_ROOM));
-				view.joinGameRoom(room);
-				break;
-
 			case GAME_START:
 				view.startGame(
 					message.args.get(Protocol.K_OPP_NICK),
