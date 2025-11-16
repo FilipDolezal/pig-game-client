@@ -27,4 +27,5 @@ public interface NetworkToViewInterface {
     void showGameLost(String message);
 
     void returnToLobby();
+    void resumeGame();
 }

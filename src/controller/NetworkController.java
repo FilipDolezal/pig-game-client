@@ -77,6 +77,11 @@ public class NetworkController implements ViewToNetworkInterface {
 		client.sendMessage(new MsgExit());
 	}
 
+	@Override
+	public void sendResume() {
+		client.sendMessage(new net.msg.MsgResume());
+	}
+
 	private void listenForMessages() {
 		try {
 			String fromServer;
@@ -113,9 +118,7 @@ public class NetworkController implements ViewToNetworkInterface {
 					case JOIN_ROOM -> view.joinGameRoom(Integer.parseInt(message.args.get(Protocol.K_ROOM)));
 					case LEAVE_ROOM -> view.returnToLobby();
 					case QUIT -> view.quitGameRoom();
-					/* TODO
-					OK|command:RESUME
-					 */
+					case RESUME -> view.resumeGame();
 				}
 				break;
 
@@ -166,6 +169,15 @@ public class NetworkController implements ViewToNetworkInterface {
 
 			case GAME_LOSE:
 				view.showGameLost(message.args.get(Protocol.K_MSG));
+				break;
+
+			case GAME_PAUSED:
+				int dialogResult = JOptionPane.showConfirmDialog(null,
+						"Your opponent has paused the game. Do you want to resume?",
+						"Game Paused", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					sendResume();
+				}
 				break;
 		}
 	}

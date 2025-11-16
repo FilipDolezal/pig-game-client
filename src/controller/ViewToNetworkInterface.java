@@ -9,4 +9,5 @@ public interface ViewToNetworkInterface {
     void sendRoll();
     void sendHold();
     void sendExit();
+    void sendResume();
 }

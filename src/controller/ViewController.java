@@ -98,6 +98,11 @@ public class ViewController implements NetworkToViewInterface {
         }
     }
 
+    @Override
+    public void resumeGame() {
+        mainFrame.getGameView().resumeGame();
+    }
+
     public void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(mainFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }

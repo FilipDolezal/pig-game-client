@@ -267,5 +267,10 @@ public class GameView extends JPanel {
         playerPanel.repaint();
         opponentPanel.repaint();
     }
+
+    public void resumeGame() {
+        rollButton.setEnabled(true);
+        holdButton.setEnabled(true);
+    }
 }
 

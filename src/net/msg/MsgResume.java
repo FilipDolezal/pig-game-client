@@ -2,7 +2,7 @@ package net.msg;
 
 import net.Protocol;
 
-public class MsgResume extends ClientMessageLobby {
+public final class MsgResume extends ClientMessage {
     public MsgResume() {
         super(Protocol.ClientCommand.RESUME);
     }
