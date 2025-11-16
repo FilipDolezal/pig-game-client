@@ -111,10 +111,9 @@ public class NetworkController implements ViewToNetworkInterface {
 				{
 					case LOGIN -> view.login(message.args.get(Protocol.K_NICK));
 					case JOIN_ROOM -> view.joinGameRoom(Integer.parseInt(message.args.get(Protocol.K_ROOM)));
+					case LEAVE_ROOM -> view.returnToLobby();
+					case QUIT -> view.quitGameRoom();
 					/* TODO
-					OK|command:LOGIN
-					OK|command:LEAVE_ROOM
-					OK|command:QUIT
 					OK|command:RESUME
 					 */
 				}
@@ -122,8 +121,15 @@ public class NetworkController implements ViewToNetworkInterface {
 
 			case ERROR:
 				// Handle ERROR message
+				if (clientArgCmd == null) {
+					view.showErrorMessage("Error", "Error: " + clientArgMsg);
+					break;
+				}
+
 				switch (clientArgCmd)
 				{
+					case LEAVE_ROOM -> view.showErrorMessage("Cannot Leave Room", "The game is already underway, you cannot leave.");
+					case QUIT -> view.showErrorMessage("Cannot Quit Game", "You cannot quit the game at this moment.");
 					default -> view.showErrorMessage("Error", "Error: " + clientArgMsg);
 				}
 				break;

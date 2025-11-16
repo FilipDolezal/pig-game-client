@@ -14,6 +14,8 @@ public interface NetworkToViewInterface {
     /** response to JOIN_ROOM */
     void joinGameRoom(int id);
 
+    void quitGameRoom();
+
     /** response to GAME_START */
     void startGame(String oppNick, boolean turn);
 
@@ -23,4 +25,6 @@ public interface NetworkToViewInterface {
 
     void showGameWon(String message);
     void showGameLost(String message);
+
+    void returnToLobby();
 }

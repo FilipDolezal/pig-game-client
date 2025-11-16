@@ -48,6 +48,15 @@ public class ViewController implements NetworkToViewInterface {
     }
 
     @Override
+    public void quitGameRoom() {
+        if (player != null) {
+            player.setState(PlayerState.LOBBY);
+            player.setCurrentRoomId(-1);
+        }
+        returnToLobby();
+    }
+
+    @Override
     public void startGame(String oppNick, boolean turn) {
         mainFrame.getGameView().showLeaveButton(false);
         mainFrame.getGameView().gameStart(oppNick, turn);
@@ -76,7 +85,8 @@ public class ViewController implements NetworkToViewInterface {
         mainFrame.showView("lobby");
     }
 
-    private void returnToLobby() {
+    @Override
+    public void returnToLobby() {
         if (player != null) {
             player.setState(PlayerState.LOBBY);
             player.setCurrentRoomId(-1);
@@ -116,7 +126,6 @@ public class ViewController implements NetworkToViewInterface {
         if (networkController != null) {
             networkController.sendLeaveRoom();
         }
-        returnToLobby();
     }
 
 
@@ -131,9 +140,6 @@ public class ViewController implements NetworkToViewInterface {
 
         if (confirm == JOptionPane.YES_OPTION) {
             networkController.sendQuitGame();
-            mainFrame.showView("lobby");
-            player.setState(PlayerState.LOBBY);
-            player.setCurrentRoomId(-1);
         }
     }
 
