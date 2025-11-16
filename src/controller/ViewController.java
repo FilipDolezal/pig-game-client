@@ -153,8 +153,7 @@ public class ViewController implements NetworkToViewInterface {
         try {
             int port = Integer.parseInt(portStr);
             if (networkController.connect(ip, port, nickname)) {
-                this.player = new Player(nickname); // Initialize player here
-                mainFrame.showView("lobby");
+                this.player = new Player(nickname);
             }
         } catch (NumberFormatException ex) {
             showErrorMessage("Error", "Invalid port number.");

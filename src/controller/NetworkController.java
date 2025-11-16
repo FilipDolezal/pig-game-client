@@ -106,10 +106,17 @@ public class NetworkController implements ViewToNetworkInterface {
 
 			case OK:
 				// Handle OK message
+				String cmd = message.args.get(Protocol.K_CMD);
+				String msg = message.args.get(Protocol.K_MSG);
+				System.out.println("OK:" + cmd + " " + msg);
 				break;
 
 			case ERROR:
 				// Handle ERROR message
+				String ecmd = message.args.get(Protocol.K_CMD);
+				String emsg = message.args.get(Protocol.K_MSG);
+				System.out.println("ERR:" + ecmd + " " + emsg);
+
 				view.showErrorMessage("Error", "Error: " + message.args.get(Protocol.K_MSG));
 				break;
 
