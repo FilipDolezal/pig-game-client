@@ -138,6 +138,8 @@ public class GameView extends JPanel {
         opponentBorder.setTitle(opponentNick);
         updateTurnHighlight(isPlayerTurn);
         opponentPanel.repaint(); // to show the new title
+        rollButton.setEnabled(isPlayerTurn);
+        holdButton.setEnabled(isPlayerTurn);
     }
 
     public void setWaitingForOpponent(boolean waiting) {

@@ -11,7 +11,7 @@ public class Main {
             ViewController viewController = new ViewController(mainFrame);
             NetworkController networkController = new NetworkController(viewController);
             viewController.setNetworkController(networkController);
-            mainFrame.setCloseAction(viewController::handleExitAction);
+            mainFrame.setCloseAction(viewController::onCloseAction);
             mainFrame.setVisible(true);
         });
     }

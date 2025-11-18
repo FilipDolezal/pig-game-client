@@ -199,4 +199,10 @@ public class ViewController implements NetworkToViewInterface {
         this.gameRooms = null;
         mainFrame.showView("login");
     }
+
+    public void onCloseAction()
+    {
+        handleExitAction();
+        System.exit(0);
+    }
 }
