@@ -35,7 +35,6 @@ public class NetworkController implements ViewToNetworkInterface {
 			// Start a new thread to listen for messages from the server
 			new Thread(this::listenForMessages).start();
 		} catch (IOException e) {
-			// TODO: Handle connection error
 			e.printStackTrace();
 			SwingUtilities.invokeLater(() ->
 				view.showErrorMessage("Connection Error", "Connection failed: " + e.getMessage())
@@ -101,6 +100,9 @@ public class NetworkController implements ViewToNetworkInterface {
 		} catch (IOException e) {
 			// TODO: Handle disconnection
 			e.printStackTrace();
+			SwingUtilities.invokeLater(() ->
+				view.showErrorMessage("Disconnection", e.getMessage())
+			);
 		}
 	}
 

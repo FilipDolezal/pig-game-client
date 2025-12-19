@@ -26,7 +26,7 @@ public class ViewController implements NetworkToViewInterface {
     @Override
     public void initializeGameRooms(int maxRooms) {
         this.gameRooms = new GameRooms(maxRooms);
-        mainFrame.getLobbyView().setGameRoomsModel(gameRooms);
+        mainFrame.lobbyView.setGameRoomsModel(gameRooms);
     }
 
     @Override
@@ -40,9 +40,9 @@ public class ViewController implements NetworkToViewInterface {
     public void joinGameRoom(int id) {
         if (player != null) {
             player.setCurrentRoomId(id);
-            player.setState(PlayerState.IN_GAME); // Player is in a room, could be waiting
-            mainFrame.getGameView().showLeaveButton(true);
-            mainFrame.getGameView().setWaitingForOpponent(true);
+            player.setState(PlayerState.IN_GAME);
+            mainFrame.gameView.showLeaveButton(true);
+            mainFrame.gameView.setWaitingForOpponent(true);
             mainFrame.showView("game");
         }
     }
@@ -58,13 +58,13 @@ public class ViewController implements NetworkToViewInterface {
 
     @Override
     public void startGame(String oppNick, boolean turn) {
-        mainFrame.getGameView().showLeaveButton(false);
-        mainFrame.getGameView().gameStart(oppNick, turn);
+        mainFrame.gameView.showLeaveButton(false);
+        mainFrame.gameView.gameStart(oppNick, turn);
     }
 
     @Override
     public void gameState(int myScore, int oppScore, int turnScore, int roll, boolean turn) {
-        mainFrame.getGameView().gameState(myScore, oppScore, turnScore, roll, turn);
+        mainFrame.gameView.gameState(myScore, oppScore, turnScore, roll, turn);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ViewController implements NetworkToViewInterface {
             player.setState(PlayerState.LOBBY);
             player.setCurrentRoomId(-1);
         }
-        mainFrame.getGameView().resetView();
+        mainFrame.gameView.resetView();
         mainFrame.showView("lobby");
         if (networkController != null) {
             networkController.sendListRooms();
@@ -100,7 +100,7 @@ public class ViewController implements NetworkToViewInterface {
 
     @Override
     public void resumeGame() {
-        mainFrame.getGameView().resumeGame();
+        mainFrame.gameView.resumeGame();
         if (networkController != null) {
             networkController.sendGameStateRequest();
         }
@@ -125,23 +125,25 @@ public class ViewController implements NetworkToViewInterface {
     }
 
     private void addListeners() {
-        mainFrame.getLoginView().getLoginButton().addActionListener(e -> handleLoginAction());
-        mainFrame.getLobbyView().getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());
-        mainFrame.getLobbyView().getExitButton().addActionListener(e -> handleExitAction());
+        mainFrame.loginView.getLoginButton().addActionListener(e -> handleLoginAction());
+        mainFrame.lobbyView.getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());
+        mainFrame.lobbyView.getExitButton().addActionListener(e -> handleExitAction());
+        mainFrame.gameView.getRollButton().addActionListener(e -> handleRollAction());
+        mainFrame.gameView.getHoldButton().addActionListener(e -> handleHoldAction());
+        mainFrame.gameView.getQuitButton().addActionListener(e -> handleQuitGameAction());
+        mainFrame.gameView.getLeaveButton().addActionListener(e -> handleLeaveRoomAction());
+    }
 
-        mainFrame.getGameView().getRollButton().addActionListener(e -> {
-            if (networkController != null) {
-                networkController.sendRoll();
-            }
-        });
+    private void handleHoldAction() {
+        if (networkController != null) {
+            networkController.sendHold();
+        }
+    }
 
-        mainFrame.getGameView().getHoldButton().addActionListener(e -> {
-            if (networkController != null) {
-                networkController.sendHold();
-            }
-        });
-        mainFrame.getGameView().getQuitButton().addActionListener(e -> handleQuitGameAction());
-        mainFrame.getGameView().getLeaveButton().addActionListener(e -> handleLeaveRoomAction());
+    private void handleRollAction() {
+        if (networkController != null) {
+            networkController.sendRoll();
+        }
     }
 
     private void handleLeaveRoomAction() {
@@ -166,7 +168,7 @@ public class ViewController implements NetworkToViewInterface {
     }
 
     private void handleJoinRoomAction() {
-        int selectedRoomId = mainFrame.getLobbyView().getSelectedRoomId();
+        int selectedRoomId = mainFrame.lobbyView.getSelectedRoomId();
         if (selectedRoomId == -1) {
             showErrorMessage("Join Room Error", "Please select a room to join.");
             return;
@@ -175,9 +177,9 @@ public class ViewController implements NetworkToViewInterface {
     }
 
     private void handleLoginAction() {
-        String ip = mainFrame.getLoginView().getIp();
-        String portStr = mainFrame.getLoginView().getPort();
-        String nickname = mainFrame.getLoginView().getNickname();
+        String ip = mainFrame.loginView.getIp();
+        String portStr = mainFrame.loginView.getPort();
+        String nickname = mainFrame.loginView.getNickname();
 
         if (ip.isEmpty() || portStr.isEmpty() || nickname.isEmpty()) {
             showErrorMessage("Error", "IP, Port, and Nickname cannot be empty.");
@@ -198,11 +200,5 @@ public class ViewController implements NetworkToViewInterface {
         this.player = null;
         this.gameRooms = null;
         mainFrame.showView("login");
-    }
-
-    public void onCloseAction()
-    {
-        handleExitAction();
-        System.exit(0);
     }
 }
