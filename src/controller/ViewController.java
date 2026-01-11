@@ -124,6 +124,16 @@ public class ViewController implements NetworkToViewInterface {
         }
     }
 
+    @Override
+    public void showOpponentDisconnected() {
+        mainFrame.gameView.showOpponentDisconnected(true);
+    }
+
+    @Override
+    public void hideOpponentDisconnected() {
+        mainFrame.gameView.showOpponentDisconnected(false);
+    }
+
     private void addListeners() {
         mainFrame.loginView.getLoginButton().addActionListener(e -> handleLoginAction());
         mainFrame.lobbyView.getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());

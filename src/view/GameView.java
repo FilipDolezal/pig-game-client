@@ -11,6 +11,7 @@ public class GameView extends JPanel {
     private JLabel opponentTotalScoreLabel;
     private JLabel opponentTurnScoreLabel;
     private JLabel opponentRollLabel;
+    private JLabel opponentDisconnectedLabel;
     private TitledBorder opponentBorder;
 
     // Player components
@@ -84,6 +85,13 @@ public class GameView extends JPanel {
         opponentRollLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         gbc.gridy = 2;
         panel.add(opponentRollLabel, gbc);
+
+        opponentDisconnectedLabel = new JLabel("Player disconnected");
+        opponentDisconnectedLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        opponentDisconnectedLabel.setForeground(Color.RED);
+        opponentDisconnectedLabel.setVisible(false);
+        gbc.gridy = 3;
+        panel.add(opponentDisconnectedLabel, gbc);
 
         return panel;
     }
@@ -265,6 +273,7 @@ public class GameView extends JPanel {
         showLeaveButton(false); // Default to showing quit button
 
         setWaitingForOpponent(false);
+        showOpponentDisconnected(false);
 
         playerPanel.repaint();
         opponentPanel.repaint();
@@ -273,6 +282,11 @@ public class GameView extends JPanel {
     public void resumeGame() {
         rollButton.setEnabled(true);
         holdButton.setEnabled(true);
+    }
+
+    public void showOpponentDisconnected(boolean bool) {
+        opponentDisconnectedLabel.setVisible(bool);
+        opponentPanel.repaint();
     }
 }
 

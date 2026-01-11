@@ -29,4 +29,6 @@ public interface NetworkToViewInterface {
     void returnToLobby();
     void resumeGame();
     void showGamePausedDialog();
+    void showOpponentDisconnected();
+    void hideOpponentDisconnected();
 }

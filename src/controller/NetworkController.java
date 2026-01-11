@@ -181,6 +181,14 @@ public class NetworkController implements ViewToNetworkInterface {
 			case GAME_PAUSED:
 				view.showGamePausedDialog();
 				break;
+
+			case OPPONENT_DISCONNECTED:
+				view.showOpponentDisconnected();
+				break;
+
+			case OPPONENT_RECONNECTED:
+				view.hideOpponentDisconnected();
+				break;
 		}
 	}
 }
