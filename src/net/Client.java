@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Client {
-    private static final long PING_INTERVAL = 8000; // 8 seconds, safely under 20s timeout
+    private static final long PING_INTERVAL = 5000;
 
     private Socket sock;
     private PrintWriter out;

@@ -133,6 +133,14 @@ public class NetworkController implements ViewToNetworkInterface {
 				ServerMessage parsedMessage = ServerMessage.parse(fromServer);
 				if (parsedMessage != null) {
 					SwingUtilities.invokeLater(() -> handleServerMessage(parsedMessage));
+				} else {
+					// Server sent unparseable garbage
+					String garbage = fromServer;
+					System.err.println("Invalid message from server: " + garbage);
+					SwingUtilities.invokeLater(() ->
+						view.showNoResponseWarning("INVALID SERVER MESSAGE: " +
+							(garbage.length() > 30 ? garbage.substring(0, 30) + "..." : garbage))
+					);
 				}
 
 			}
