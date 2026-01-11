@@ -115,6 +115,7 @@ public class NetworkController implements ViewToNetworkInterface {
 			case WELCOME:
 				maxPlayers = Integer.parseInt(message.args.get(Protocol.K_PLAYERS));
 				maxRooms = Integer.parseInt(message.args.get(Protocol.K_ROOMS));
+				client.startHeartbeat();
 				view.initializeGameRooms(maxRooms);
 				break;
 

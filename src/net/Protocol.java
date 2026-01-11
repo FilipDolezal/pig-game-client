@@ -11,7 +11,8 @@ public class Protocol {
         HOLD,
         QUIT,
         EXIT,
-        GAME_STATE_REQUEST;
+        GAME_STATE_REQUEST,
+        PING;
 
         public static ClientCommand fromString(String commandText) {
             if (commandText == null) {
