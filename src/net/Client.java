@@ -19,6 +19,11 @@ public class Client {
     private volatile long lastSentTime;
     private Thread heartbeatThread;
     private volatile boolean running;
+    private Runnable onPingSent;
+
+    public void setOnPingSent(Runnable callback) {
+        this.onPingSent = callback;
+    }
 
     public void connect(String ip, int port) throws IOException {
         sock = new Socket(ip, port);
@@ -58,6 +63,9 @@ public class Client {
                 Thread.sleep(1000); // Check every second
                 if (System.currentTimeMillis() - lastSentTime > PING_INTERVAL) {
                     sendMessage(new MsgPing());
+                    if (onPingSent != null) {
+                        onPingSent.run();
+                    }
                 }
             } catch (InterruptedException e) {
                 break;

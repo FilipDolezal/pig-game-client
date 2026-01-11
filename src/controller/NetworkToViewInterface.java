@@ -31,4 +31,6 @@ public interface NetworkToViewInterface {
     void showGamePausedDialog();
     void showOpponentDisconnected();
     void hideOpponentDisconnected();
+    void showNoResponseWarning(String command);
+    void hideNoResponseWarning();
 }

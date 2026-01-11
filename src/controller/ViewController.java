@@ -134,6 +134,16 @@ public class ViewController implements NetworkToViewInterface {
         mainFrame.gameView.showOpponentDisconnected(false);
     }
 
+    @Override
+    public void showNoResponseWarning(String command) {
+        mainFrame.showWarning("No response from server for: " + command);
+    }
+
+    @Override
+    public void hideNoResponseWarning() {
+        mainFrame.hideWarning();
+    }
+
     private void addListeners() {
         mainFrame.loginView.getLoginButton().addActionListener(e -> handleLoginAction());
         mainFrame.lobbyView.getJoinRoomButton().addActionListener(e -> handleJoinRoomAction());
