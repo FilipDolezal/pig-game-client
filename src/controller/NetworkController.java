@@ -32,6 +32,7 @@ public class NetworkController implements ViewToNetworkInterface {
 
 	// Track if we were in a game (for automatic reconnection/resume)
 	private volatile boolean wasInGame = false;
+        private volatile boolean intentionalExit = false;
 
 	public NetworkController(ViewController viewController) {
 		this.client = new Client();
@@ -63,6 +64,7 @@ public class NetworkController implements ViewToNetworkInterface {
 	}
 
 	public void connect(String ip, int port, String nickname) {
+                intentionalExit = false;
 		try {
 			client.connect(ip, port);
 			client.setNickname(nickname);
@@ -114,9 +116,11 @@ public class NetworkController implements ViewToNetworkInterface {
 
 	@Override
 	public void sendExit() {
+                intentionalExit = true;
 		cancelResponseTimer();
 		client.sendMessage(new MsgExit());
 		// EXIT doesn't expect a response
+                try { client.close(); } catch (IOException e) {}
 	}
 
 	@Override
@@ -207,6 +211,7 @@ public class NetworkController implements ViewToNetworkInterface {
 	 * If wasInGame is true, automatically sends RESUME after successful login.
 	 */
 	private void handleDisconnection() {
+                if (intentionalExit) return;
 		client.stopHeartbeat();
 		cancelResponseTimer();
 		boolean shouldResume = wasInGame;
