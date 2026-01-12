@@ -165,7 +165,7 @@ public class NetworkController implements ViewToNetworkInterface {
 								   pendingCommand == ClientCommand.HOLD ||
 								   pendingCommand == ClientCommand.GAME_STATE_REQUEST;
 				case WELCOME, GAME_START, GAME_WIN, GAME_LOSE, GAME_PAUSED,
-					 OPPONENT_DISCONNECTED, OPPONENT_RECONNECTED -> true;
+					 OPPONENT_DISCONNECTED, OPPONENT_RECONNECTED, DISCONNECTED -> true;
 			};
 			if (shouldCancel) {
 				cancelResponseTimer();
@@ -246,6 +246,11 @@ public class NetworkController implements ViewToNetworkInterface {
 			case OPPONENT_DISCONNECTED:
 				view.showOpponentDisconnected();
 				break;
+
+			case DISCONNECTED:
+					client.stopHeartbeat();
+					view.disconnect();
+					break;
 
 			case OPPONENT_RECONNECTED:
 				view.hideOpponentDisconnected();

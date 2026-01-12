@@ -39,7 +39,8 @@ public class Protocol {
         GAME_WIN,
         GAME_LOSE,
         OPPONENT_DISCONNECTED,
-        OPPONENT_RECONNECTED
+        OPPONENT_RECONNECTED,
+        DISCONNECTED
     }
 
     public enum ServerError {

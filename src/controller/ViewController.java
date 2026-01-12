@@ -221,4 +221,12 @@ public class ViewController implements NetworkToViewInterface {
         this.gameRooms = null;
         mainFrame.showView("login");
     }
+
+    @Override
+    public void disconnect() {
+        this.player = null;
+        this.gameRooms = null;
+        mainFrame.showView("login");
+        JOptionPane.showMessageDialog(mainFrame, "You have been disconnected from the server.", "Disconnected", JOptionPane.WARNING_MESSAGE);
+    }
 }

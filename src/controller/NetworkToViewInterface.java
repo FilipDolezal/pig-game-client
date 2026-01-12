@@ -33,4 +33,5 @@ public interface NetworkToViewInterface {
     void hideOpponentDisconnected();
     void showNoResponseWarning(String command);
     void hideNoResponseWarning();
+    void disconnect();
 }
