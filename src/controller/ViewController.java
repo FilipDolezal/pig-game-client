@@ -187,7 +187,15 @@ public class ViewController implements NetworkToViewInterface {
         }
     }
 
+    private long lastJoinClickTime = 0;
+    private static final long JOIN_COOLDOWN_MS = 5000;
+
     private void handleJoinRoomAction() {
+        long now = System.currentTimeMillis();
+        if (now - lastJoinClickTime < JOIN_COOLDOWN_MS) {
+            return;
+        }
+        lastJoinClickTime = now;
         int selectedRoomId = mainFrame.lobbyView.getSelectedRoomId();
         if (selectedRoomId == -1) {
             showErrorMessage("Join Room Error", "Please select a room to join.");
