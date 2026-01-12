@@ -340,7 +340,7 @@ public class NetworkController implements ViewToNetworkInterface {
 			case OK:
 				switch (clientArgCmd)
 				{
-					case LOGIN -> view.login(message.args.get(Protocol.K_NICK));
+					case LOGIN -> { view.login(message.args.get(Protocol.K_NICK)); sendListRooms(); }
 					case JOIN_ROOM -> view.joinGameRoom(Integer.parseInt(message.args.get(Protocol.K_ROOM)));
 					case LEAVE_ROOM -> view.returnToLobby();
 					case QUIT -> view.quitGameRoom();
