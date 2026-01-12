@@ -11,6 +11,8 @@ import java.net.Socket;
 
 public class Client {
     private static final long PING_INTERVAL = 5000;
+    private static final int RECONNECT_ATTEMPTS = 10;
+    private static final long RECONNECT_DELAY_MS = 2000;
 
     private Socket sock;
     private PrintWriter out;
@@ -21,14 +23,68 @@ public class Client {
     private volatile boolean running;
     private Runnable onPingSent;
 
+    // Connection info for reconnection
+    private String serverIp;
+    private int serverPort;
+    private String nickname;
+
     public void setOnPingSent(Runnable callback) {
         this.onPingSent = callback;
     }
 
     public void connect(String ip, int port) throws IOException {
+        this.serverIp = ip;
+        this.serverPort = port;
         sock = new Socket(ip, port);
         out = new PrintWriter(sock.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    /**
+     * Attempts to reconnect to the server using stored connection info.
+     * @return true if reconnection succeeded, false otherwise
+     */
+    public boolean reconnect() {
+        if (serverIp == null || serverPort == 0) {
+            return false;
+        }
+
+        // Close old connection if it exists
+        try {
+            if (sock != null && !sock.isClosed()) {
+                sock.close();
+            }
+        } catch (IOException ignored) {}
+
+        for (int attempt = 1; attempt <= RECONNECT_ATTEMPTS; attempt++) {
+            try {
+                System.out.println("Reconnection attempt " + attempt + "/" + RECONNECT_ATTEMPTS);
+                sock = new Socket(serverIp, serverPort);
+                out = new PrintWriter(sock.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                System.out.println("Reconnected successfully");
+                return true;
+            } catch (IOException e) {
+                System.err.println("Reconnection attempt " + attempt + " failed: " + e.getMessage());
+                if (attempt < RECONNECT_ATTEMPTS) {
+                    try {
+                        Thread.sleep(RECONNECT_DELAY_MS);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void sendMessage(ClientMessage msg) {
