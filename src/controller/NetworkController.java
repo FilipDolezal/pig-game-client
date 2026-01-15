@@ -17,6 +17,10 @@ import net.Protocol;
 import javax.swing.*;
 import java.io.IOException;
 
+/**
+ * Handles all server communication. Sends commands, listens for responses,
+ * and handles automatic reconnection if the connection drops.
+ */
 public class NetworkController implements ViewToNetworkInterface {
 	private static final int RESPONSE_TIMEOUT_MS = 2500;
 	private static final int LOGIN_RETRY_ATTEMPTS = 20;
@@ -27,12 +31,13 @@ public class NetworkController implements ViewToNetworkInterface {
 	private int maxPlayers;
 	private int maxRooms;
 
+	// Response timer: warns user if server doesn't respond within RESPONSE_TIMEOUT_MS
 	private Timer responseTimer;
 	private ClientCommand pendingCommand;
 
-	// Track if we were in a game (for automatic reconnection/resume)
+	// For auto-reconnect: if we were in a game, send RESUME after reconnecting
 	private volatile boolean wasInGame = false;
-        private volatile boolean intentionalExit = false;
+	private volatile boolean intentionalExit = false;
 
 	public NetworkController(ViewController viewController) {
 		this.client = new Client();

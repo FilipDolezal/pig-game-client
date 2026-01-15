@@ -9,6 +9,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * TCP client with automatic heartbeat (PING) to stay alive.
+ * Stores connection info for reconnection attempts.
+ */
 public class Client {
     private static final long PING_INTERVAL = 5000;
     private static final int RECONNECT_ATTEMPTS = 10;
