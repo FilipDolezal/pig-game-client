@@ -33,8 +33,6 @@ public class ServerMessage {
 
                 if (argParts.length == 2) {
                     args.put(argParts[0], argParts[1]);
-                } else {
-                    // Ignoring malformed arguments
                 }
             }
             return new ServerMessage(command, args);
