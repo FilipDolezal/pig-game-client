@@ -150,14 +150,12 @@ public class NetworkController implements ViewToNetworkInterface {
 					SwingUtilities.invokeLater(() -> handleServerMessage(parsedMessage));
 				} else {
 					// Server sent unparseable garbage - disconnect immediately
-					String garbage = fromServer;
-					System.err.println("Invalid message from server, disconnecting: " + garbage);
 					intentionalExit = true;
-					SwingUtilities.invokeLater(() ->
+					SwingUtilities.invokeLater(() -> {
 						view.showErrorMessage("Invalid Server Data",
-							"Server sent invalid data - disconnecting.\n" +
-							(garbage.length() > 50 ? garbage.substring(0, 50) + "..." : garbage))
-					);
+							"Server sent invalid data - disconnecting.");
+						view.disconnect();
+					});
 					try { client.close(); } catch (IOException ignored) {}
 					break;
 				}
